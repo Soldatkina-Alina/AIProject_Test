@@ -10,3 +10,4 @@
 | 6 | Добавить покрытие тестами для всех контроллеров | Убедиться в стабильности и правильности работы API | `src/PromoCodeFactory.UnitTests/WebHost/Controllers/` | ❌ |
 | 7 | Реализовать фильтрацию, сортировку и пагинацию данных | Улучшить пользовательский опыт при работе с большими объемами данных | `src/PromoCodeFactory.WebHost/Controllers/`, `src/PromoCodeFactory.DataAccess/Repositories/` | ❌ |
 | 8 | Добавить поддержку PostgreSQL для производственной среды | Обеспечить масштабируемость и надежность приложения в промышленной эксплуатации | `src/PromoCodeFactory.DataAccess/DataContext.cs`, `src/PromoCodeFactory.WebHost/Startup.cs`, `src/PromoCodeFactory.WebHost/appsettings.json` | ❌ |
+| 9 | Рефакторинг кода без изменения поведения | Улучшить читаемость и поддерживаемость кода, упростить дальнейшую разработку | `src/PromoCodeFactory.WebHost/Controllers/`, `src/PromoCodeFactory.Core/Domain/`, `src/PromoCodeFactory.DataAccess/Repositories/` | ❌ |

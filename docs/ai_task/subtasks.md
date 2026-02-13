@@ -79,3 +79,14 @@
 | 8.2 | Настроить подключение к PostgreSQL в Startup.cs | Добавить условие для выбора провайдера базы данных в зависимости от конфигурации | `src/PromoCodeFactory.WebHost/Startup.cs` |
 | 8.3 | Добавить строки подключения в appsettings.json | Добавить ConnectionString для PostgreSQL в конфигурационные файлы | `src/PromoCodeFactory.WebHost/appsettings.json`, `src/PromoCodeFactory.WebHost/appsettings.Development.json` |
 | 8.4 | Проверить работу миграций | Убедиться, что миграции Entity Framework Core работают с PostgreSQL | N/A |
+
+## Задача 9: Рефакторинг кода без изменения поведения
+
+| № | Подзадача | Описание | Файлы |
+|---|-----------|----------|-------|
+| 9.1 | Улучшить структуру контроллеров | Убедиться, что контроллеры отвечают принципам SOLID, разбить большие методы на маленькие | `src/PromoCodeFactory.WebHost/Controllers/` |
+| 9.2 | Реорганизовать доменную логику | Переместить бизнес-логику из контроллеров в сервисы уровня приложения | `src/PromoCodeFactory.WebHost/Controllers/`, `src/PromoCodeFactory.Core/ApplicationServices/` |
+| 9.3 | Улучшить репозитории | Убедиться, что репозитории следуют шаблону и не содержат бизнес-логику | `src/PromoCodeFactory.DataAccess/Repositories/` |
+| 9.4 | Улучшить модель представлений | Убедиться, что модели запросов и ответов корректно структурированы и не дублируют доменные модели | `src/PromoCodeFactory.WebHost/Models/` |
+| 9.5 | Улучшить настроенный код | Удалить неиспользуемый код, упростить сложные условия, улучшить читаемость | `src/PromoCodeFactory.WebHost/`, `src/PromoCodeFactory.Core/`, `src/PromoCodeFactory.DataAccess/` |
+| 9.6 | Проверить соответствие стандартам кодирования | Убедиться, что код соответствует соглашениям о стиле кодирования C# | `src/PromoCodeFactory.WebHost/`, `src/PromoCodeFactory.Core/`, `src/PromoCodeFactory.DataAccess/` |

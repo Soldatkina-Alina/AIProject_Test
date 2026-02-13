@@ -1,0 +1,12 @@
+# Задачи для проекта PromoCodeFactory
+
+| № | Что сделать | Зачем | Затронутые файлы/папки | Сделано |
+|---|-------------|-------|-------------------------|---------|
+| 1 | Реализовать логику выдачи промокодов клиентам | Обеспечить основной функционал приложения - предоставление промокодов пользователям по их предпочтениям | `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs`, `src/PromoCodeFactory.Core/Domain/PromoCodeManagement/PromoCode.cs`, `src/PromoCodeFactory.DataAccess/Repositories/EfRepository.cs` | ❌ |
+| 2 | Добавить проверку лимитов партнёров при выдаче промокодов | Предотвратить превышение лимита на количество выдаваемых промокодов партнером | `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs`, `src/PromoCodeFactory.Core/Domain/PromoCodeManagement/PartnerPromoCodeLimit.cs`, `src/PromoCodeFactory.DataAccess/Repositories/EfRepository.cs` | ❌ |
+| 3 | Реализовать валидацию данных на уровне домена | Обеспечить целостность данных и предотвратить создание объектов в невалидном состоянии | `src/PromoCodeFactory.Core/Domain/PromoCodeManagement/`, `src/PromoCodeFactory.Core/Domain/Administration/`, `src/PromoCodeFactory.WebHost/Models/` | ❌ |
+| 4 | Добавить аутентификацию и авторизацию по ролям | Защитить API от несанкционированного доступа и ограничить права пользователей | `src/PromoCodeFactory.WebHost/Startup.cs`, `src/PromoCodeFactory.WebHost/Controllers/`, `src/PromoCodeFactory.Core/Domain/Administration/` | ❌ |
+| 5 | Реализовать глобальную обработку исключений | Предоставить пользователям понятные сообщения об ошибках и логировать исключения для дальнейшего анализа | `src/PromoCodeFactory.WebHost/Startup.cs`, `src/PromoCodeFactory.WebHost/Middleware/`, `src/PromoCodeFactory.DataAccess/` | ❌ |
+| 6 | Добавить покрытие тестами для всех контроллеров | Убедиться в стабильности и правильности работы API | `src/PromoCodeFactory.UnitTests/WebHost/Controllers/` | ❌ |
+| 7 | Реализовать фильтрацию, сортировку и пагинацию данных | Улучшить пользовательский опыт при работе с большими объемами данных | `src/PromoCodeFactory.WebHost/Controllers/`, `src/PromoCodeFactory.DataAccess/Repositories/` | ❌ |
+| 8 | Добавить поддержку PostgreSQL для производственной среды | Обеспечить масштабируемость и надежность приложения в промышленной эксплуатации | `src/PromoCodeFactory.DataAccess/DataContext.cs`, `src/PromoCodeFactory.WebHost/Startup.cs`, `src/PromoCodeFactory.WebHost/appsettings.json` | ❌ |

@@ -42,17 +42,7 @@ namespace PromoCodeFactory.WebHost.Controllers
         public async Task<ActionResult<List<PromoCodeShortResponse>>> GetPromocodesAsync()
         {
             var promoCodes = await _promoCodesRepository.GetAllAsync();
-
-            var response = promoCodes.Select(x => new PromoCodeShortResponse()
-            {
-                Id = x.Id,
-                Code = x.Code,
-                BeginDate = x.BeginDate.ToString("yyyy-MM-dd"),
-                EndDate = x.EndDate.ToString("yyyy-MM-dd"),
-                PartnerName = x.PartnerName,
-                ServiceInfo = x.ServiceInfo
-            }).ToList();
-
+            var response = MapPromoCodesToShortResponses(promoCodes);
             return Ok(response);
         }
         
@@ -64,47 +54,97 @@ namespace PromoCodeFactory.WebHost.Controllers
         [HttpPost("give")]
         public async Task<IActionResult> GivePromoCodeAsync(GivePromoCodeRequest request)
         {
-            // Проверка наличия клиента
+            var validationResult = await ValidateRequest(request);
+            if (validationResult != null)
+            {
+                return validationResult;
+            }
+
             var customer = await _customersRepository.GetByIdAsync(request.CustomerId);
-            if (customer == null)
+            var partner = await _partnersRepository.GetByIdAsync(request.PartnerId);
+            var preference = await _preferencesRepository.GetByIdAsync(request.PreferenceId);
+
+            var newPromoCode = CreatePromoCode(partner, preference);
+            await SavePromoCode(newPromoCode);
+
+            return Ok("Промокод успешно выдан");
+        }
+
+        private List<PromoCodeShortResponse> MapPromoCodesToShortResponses(IEnumerable<PromoCode> promoCodes)
+        {
+            return promoCodes.Select(x => new PromoCodeShortResponse()
+            {
+                Id = x.Id,
+                Code = x.Code,
+                BeginDate = x.BeginDate.ToString("yyyy-MM-dd"),
+                EndDate = x.EndDate.ToString("yyyy-MM-dd"),
+                PartnerName = x.PartnerName,
+                ServiceInfo = x.ServiceInfo
+            }).ToList();
+        }
+
+        private async Task<IActionResult> ValidateRequest(GivePromoCodeRequest request)
+        {
+            if (!await CustomerExists(request.CustomerId))
             {
                 return NotFound("Клиент не найден");
             }
 
-            // Проверка наличия партнера
-            var partner = await _partnersRepository.GetByIdAsync(request.PartnerId);
-            if (partner == null)
+            if (!await PartnerExists(request.PartnerId))
             {
                 return NotFound("Партнер не найден");
             }
 
-            // Проверка наличия предпочтения
-            var preference = await _preferencesRepository.GetByIdAsync(request.PreferenceId);
-            if (preference == null)
+            if (!await PreferenceExists(request.PreferenceId))
             {
                 return NotFound("Предпочтение не найдено");
             }
 
-            // Проверка, что клиент имеет указанное предпочтение
-            var customerPreference = customer.Preferences.FirstOrDefault(p => p.PreferenceId == request.PreferenceId);
-            if (customerPreference == null)
+            if (!await CustomerHasPreference(request.CustomerId, request.PreferenceId))
             {
                 return BadRequest("У клиента нет указанного предпочтения");
             }
 
-            // Создание нового промокода
-            var newPromoCode = PromoCode.Create(
+            return null;
+        }
+
+        private async Task<bool> CustomerExists(Guid customerId)
+        {
+            var customer = await _customersRepository.GetByIdAsync(customerId);
+            return customer != null;
+        }
+
+        private async Task<bool> PartnerExists(Guid partnerId)
+        {
+            var partner = await _partnersRepository.GetByIdAsync(partnerId);
+            return partner != null;
+        }
+
+        private async Task<bool> PreferenceExists(Guid preferenceId)
+        {
+            var preference = await _preferencesRepository.GetByIdAsync(preferenceId);
+            return preference != null;
+        }
+
+        private async Task<bool> CustomerHasPreference(Guid customerId, Guid preferenceId)
+        {
+            var customer = await _customersRepository.GetByIdAsync(customerId);
+            var customerPreference = customer.Preferences.FirstOrDefault(p => p.PreferenceId == preferenceId);
+            return customerPreference != null;
+        }
+
+        private PromoCode CreatePromoCode(Partner partner, Preference preference)
+        {
+            return PromoCode.Create(
                 partner.Name,
                 preference,
                 partner.PartnerManager
             );
+        }
 
-            // Сохранение промокода в базе данных
-            await _promoCodesRepository.AddAsync(newPromoCode);
-
-            // TODO: Добавить связь промокода с клиентом (если требуется)
-
-            return Ok("Промокод успешно выдан");
+        private async Task SavePromoCode(PromoCode promoCode)
+        {
+            await _promoCodesRepository.AddAsync(promoCode);
         }
     }
 }

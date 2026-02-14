@@ -9,7 +9,7 @@
 | 1.3 | Реализовать логику генерации промокода | Добавить метод для создания уникального номера промокода с заданным форматом | `src/PromoCodeFactory.Core/Domain/PromoCodeManagement/PromoCode.cs` | ✅ |
 | 1.4 | Добавить проверку существования клиента и предпочтения | Проверить, что клиент и предпочтение существуют в базе данных | `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs` | ✅ |
 | 1.5 | Добавить создание записи о промокоде в базе данных | Реализовать сохранение промокода с указанием клиента, партнера и предпочтения | `src/PromoCodeFactory.DataAccess/Repositories/EfRepository.cs` | ✅ |
-| 1.6 | Написать тесты для метода выдачи промокодов | Добавить xUnit тесты для проверки корректности работы endpoint | `src/PromoCodeFactory.UnitTests/WebHost/Controllers/Promocodes/GivePromoCodeAsyncTests.cs` |
+| 1.6 | Написать тесты для метода выдачи промокодов | Добавить xUnit тесты для проверки корректности работы endpoint | `src/PromoCodeFactory.UnitTests/WebHost/Controllers/Promocodes/GivePromoCodeAsyncTests.cs` | ✅ |
 
 ## Задача 2: Добавить проверку лимитов партнёров при выдаче промокодов
 

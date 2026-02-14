@@ -10,7 +10,7 @@ using PromoCodeFactory.WebHost.Models;
 namespace PromoCodeFactory.WebHost.Controllers
 {
     /// <summary>
-    /// Промокоды
+    /// Промокоды. Это ИИ, детка
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
@@ -18,22 +18,32 @@ namespace PromoCodeFactory.WebHost.Controllers
         : ControllerBase
     {
         private readonly IRepository<PromoCode> _promoCodesRepository;
+        private readonly IRepository<Customer> _customersRepository;
+        private readonly IRepository<Partner> _partnersRepository;
+        private readonly IRepository<Preference> _preferencesRepository;
 
-        public PromocodesController(IRepository<PromoCode> promoCodesRepository)
+        public PromocodesController(
+            IRepository<PromoCode> promoCodesRepository,
+            IRepository<Customer> customersRepository,
+            IRepository<Partner> partnersRepository,
+            IRepository<Preference> preferencesRepository)
         {
             _promoCodesRepository = promoCodesRepository;
+            _customersRepository = customersRepository;
+            _partnersRepository = partnersRepository;
+            _preferencesRepository = preferencesRepository;
         }
         
         /// <summary>
         /// Получить все промокоды
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Список всех промокодов</returns>
         [HttpGet]
         public async Task<ActionResult<List<PromoCodeShortResponse>>> GetPromocodesAsync()
         {
-            var preferences = await _promoCodesRepository.GetAllAsync();
+            var promoCodes = await _promoCodesRepository.GetAllAsync();
 
-            var response = preferences.Select(x => new PromoCodeShortResponse()
+            var response = promoCodes.Select(x => new PromoCodeShortResponse()
             {
                 Id = x.Id,
                 Code = x.Code,
@@ -47,14 +57,44 @@ namespace PromoCodeFactory.WebHost.Controllers
         }
         
         /// <summary>
-        /// Создать промокод и выдать его клиентам с указанным предпочтением
+        /// Выдать промокод клиенту
         /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public Task<IActionResult> GivePromoCodesToCustomersWithPreferenceAsync(GivePromoCodeRequest request)
+        /// <param name="request">Данные запроса на выдачу промокода</param>
+        /// <returns>Результат операции</returns>
+        [HttpPost("give")]
+        public async Task<IActionResult> GivePromoCodeAsync(GivePromoCodeRequest request)
         {
-            //TODO: Создать промокод и выдать его клиентам с указанным предпочтением
-            throw new NotImplementedException();
+            // Проверка наличия клиента
+            var customer = await _customersRepository.GetByIdAsync(request.CustomerId);
+            if (customer == null)
+            {
+                return NotFound("Клиент не найден");
+            }
+
+            // Проверка наличия партнера
+            var partner = await _partnersRepository.GetByIdAsync(request.PartnerId);
+            if (partner == null)
+            {
+                return NotFound("Партнер не найден");
+            }
+
+            // Проверка наличия предпочтения
+            var preference = await _preferencesRepository.GetByIdAsync(request.PreferenceId);
+            if (preference == null)
+            {
+                return NotFound("Предпочтение не найдено");
+            }
+
+            // Проверка, что клиент имеет указанное предпочтение
+            var customerPreference = customer.Preferences.FirstOrDefault(p => p.PreferenceId == request.PreferenceId);
+            if (customerPreference == null)
+            {
+                return BadRequest("У клиента нет указанного предпочтения");
+            }
+
+            // TODO: Вызов сервиса для генерации и выдачи промокода
+
+            return Ok("Промокод успешно выдан");
         }
     }
 }

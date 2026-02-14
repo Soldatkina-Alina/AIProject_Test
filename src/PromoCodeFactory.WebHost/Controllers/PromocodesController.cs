@@ -92,7 +92,17 @@ namespace PromoCodeFactory.WebHost.Controllers
                 return BadRequest("У клиента нет указанного предпочтения");
             }
 
-            // TODO: Вызов сервиса для генерации и выдачи промокода
+            // Создание нового промокода
+            var newPromoCode = PromoCode.Create(
+                partner.Name,
+                preference,
+                partner.PartnerManager
+            );
+
+            // Сохранение промокода в базе данных
+            await _promoCodesRepository.AddAsync(newPromoCode);
+
+            // TODO: Добавить связь промокода с клиентом (если требуется)
 
             return Ok("Промокод успешно выдан");
         }

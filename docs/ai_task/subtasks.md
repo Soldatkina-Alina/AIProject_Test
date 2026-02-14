@@ -7,8 +7,8 @@
 | 1.1 | Создать модель запроса для выдачи промокода | Добавить класс `GivePromoCodeRequest` с полями CustomerId, PreferenceId, PartnerId | `src/PromoCodeFactory.WebHost/Models/GivePromoCodeRequest.cs` |
 | 1.2 | Добавить метод выдачи промокода в контроллер | Реализовать POST endpoint `/api/v1/promocodes/give` в PromocodesController | `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs` |
 | 1.3 | Реализовать логику генерации промокода | Добавить метод для создания уникального номера промокода с заданным форматом | `src/PromoCodeFactory.Core/Domain/PromoCodeManagement/PromoCode.cs` | ✅ |
-| 1.4 | Добавить проверку существования клиента и предпочтения | Проверить, что клиент и предпочтение существуют в базе данных | `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs` |
-| 1.5 | Добавить создание записи о промокоде в базе данных | Реализовать сохранение промокода с указанием клиента, партнера и предпочтения | `src/PromoCodeFactory.DataAccess/Repositories/EfRepository.cs` |
+| 1.4 | Добавить проверку существования клиента и предпочтения | Проверить, что клиент и предпочтение существуют в базе данных | `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs` | ✅ |
+| 1.5 | Добавить создание записи о промокоде в базе данных | Реализовать сохранение промокода с указанием клиента, партнера и предпочтения | `src/PromoCodeFactory.DataAccess/Repositories/EfRepository.cs` | ✅ |
 | 1.6 | Написать тесты для метода выдачи промокодов | Добавить xUnit тесты для проверки корректности работы endpoint | `src/PromoCodeFactory.UnitTests/WebHost/Controllers/Promocodes/GivePromoCodeAsyncTests.cs` |
 
 ## Задача 2: Добавить проверку лимитов партнёров при выдаче промокодов

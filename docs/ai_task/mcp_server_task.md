@@ -24,33 +24,112 @@ DeleteCustomerAsync - удаление клиента
 И другие методы для управления промокодами
 План создания MCP сервера
 
-Шаг 1: Создание MCP сервера
-Создать новый проект типа "MCP Server App" в решении
-Настроить базовую структуру сервера
-Добавить зависимости для работы с ASP.NET Core API
+## План реализации MCP сервера
 
-Шаг 2: Интеграция с существующим API
-Создать HTTP клиент для взаимодействия с PromoCodeFactory.WebHost
-Реализовать методы для вызова API:
-CreateCustomerAsync
-GetCustomerByIdAsync
-UpdateCustomerAsync
-DeleteCustomerAsync
+### Шаг 1: Создание проекта MCP сервера
 
-Шаг 3: Реализация MCP инструментов
-Создать инструменты для каждого API метода
-Настроить параметры и валидацию
-Реализовать обработку ошибок
+1. Создать папку `src/McpServer/`
+2. Создать проект типа "MCP Server App"
+3. Добавить в решение `PromoCodeFactory.sln`
 
-Шаг 4: Настройка конфигурации
-Добавить настройки подключения к API
-Настроить логирование
-Настроить Docker для MCP сервера
+### Шаг 2: Настройка зависимостей
 
-Шаг 5: Тестирование и документация
-Протестировать все инструменты
-Создать документацию по использованию
-Настроить CI/CD при необходимости
+1. Добавить зависимости для HTTP-клиента
+2. Добавить зависимости для JSON сериализации
+3. Настроить логирование
+
+### Шаг 3: Создание HTTP клиента для PromoCodeFactory
+
+1. Создать класс `PromoCodeFactoryApiClient`
+
+2. Реализовать методы для всех необходимых API вызовов:
+
+   - `CreateCustomerAsync`
+   - `GetCustomerByIdAsync`
+   - `UpdateCustomerAsync`
+   - `DeleteCustomerAsync`
+
+### Шаг 4: Создание MCP инструментов
+
+1. Создать базовый класс для инструментов
+2. Реализовать `CreateCustomerTool`
+3. Реализовать `GetCustomerTool`
+4. Реализовать `UpdateCustomerTool`
+5. Реализовать `DeleteCustomerTool`
+
+### Шаг 5: Настройка конфигурации
+
+1. Создать `appsettings.json` с настройками подключения
+2. Настроить DI контейнер
+3. Добавить логирование
+
+### Шаг 6: Docker интеграция
+
+1. Создать `Dockerfile` для MCP сервера
+2. Обновить `compose.yml` для запуска обоих сервисов
+3. Настроить сетевое взаимодействие
+
+### Шаг 7: Тестирование
+
+1. Запустить оба сервиса
+2. Протестировать MCP инструменты через Cline
+3. Проверить логи и работу
+
+## Структура файлов MCP сервера:
+
+```javascript
+src/McpServer/
+├── McpServer.csproj
+├── Program.cs
+├── appsettings.json
+├── Dockerfile
+├── Services/
+│   └── PromoCodeFactoryApiClient.cs
+├── Tools/
+│   ├── CreateCustomerTool.cs
+│   ├── GetCustomerTool.cs
+│   ├── UpdateCustomerTool.cs
+│   └── DeleteCustomerTool.cs
+└── Models/
+    ├── CreateCustomerRequest.cs
+    ├── CustomerResponse.cs
+    └── ToolResult.cs
+```
+
+## Конкретные действия:
+
+1. __Создание проекта:__
+
+```bash
+cd src
+mkdir McpServer
+cd McpServer
+dotnet new mcp-server-app -n McpServer
+```
+
+2. __Добавление в решение:__
+
+```bash
+cd ..
+dotnet sln PromoCodeFactory.sln add McpServer/McpServer.csproj
+```
+
+3. __Реализация HTTP клиента:__
+
+- Создание класса для взаимодействия с PromoCodeFactory API
+- Реализация всех необходимых методов
+
+4. __Реализация инструментов:__
+
+- Каждый инструмент будет иметь описание параметров
+- Реализация валидации входных данных
+- Обработка ошибок
+
+5. __Настройка Docker:__
+
+- Создание Dockerfile для MCP сервера
+- Обновление compose.yml для запуска обоих сервисов
+
 
 Преимущества такого подхода:
 Простота интеграции с существующим API

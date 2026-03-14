@@ -43,7 +43,7 @@ DeleteCustomerAsync - удаление клиента
 1. Создать класс `PromoCodeFactoryApiClient`
 
 2. Реализовать методы для всех необходимых API вызовов:
-
+    - `GetCustomerAsync`
    - `CreateCustomerAsync`
    - `GetCustomerByIdAsync`
    - `UpdateCustomerAsync`
@@ -52,6 +52,7 @@ DeleteCustomerAsync - удаление клиента
 ### Шаг 4: Создание MCP инструментов
 
 1. Создать базовый класс для инструментов
+2. Реализовать `GetCustomerAsync`
 2. Реализовать `CreateCustomerTool`
 3. Реализовать `GetCustomerTool`
 4. Реализовать `UpdateCustomerTool`
@@ -62,18 +63,21 @@ DeleteCustomerAsync - удаление клиента
 1. Создать `appsettings.json` с настройками подключения
 2. Настроить DI контейнер
 3. Добавить логирование
+4. Использовать sqlLite
 
 ### Шаг 6: Docker интеграция
 
 1. Создать `Dockerfile` для MCP сервера
 2. Обновить `compose.yml` для запуска обоих сервисов
 3. Настроить сетевое взаимодействие
+4. Использовать sqlLite
 
 ### Шаг 7: Тестирование
 
 1. Запустить оба сервиса
 2. Протестировать MCP инструменты через Cline
 3. Проверить логи и работу
+
 
 ## Структура файлов MCP сервера:
 

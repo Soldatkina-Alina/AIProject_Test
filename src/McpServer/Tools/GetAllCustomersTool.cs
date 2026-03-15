@@ -25,7 +25,7 @@ namespace McpServer.Tools
         /// <summary>
         /// Получает список всех клиентов
         /// </summary>
-        /// <returns>Результат операции с списком клиентов</returns>
+        /// <returns>Результат операции со списком клиентов</returns>
         public async Task<ToolResult<IEnumerable<CustomerResponse>>> ExecuteAsync()
         {
             try

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace McpServer.Models
@@ -10,6 +11,6 @@ namespace McpServer.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public List<int> PreferenceIds { get; set; } = new List<int>();
+        public List<Guid> PreferenceIds { get; set; } = new List<Guid>();
     }
 }

@@ -56,6 +56,9 @@ namespace PromoCodeFactory.WebHost.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerResponse>> CreateCustomerAsync(CreateOrEditCustomerRequest request)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var customer = new Customer()
             {
                 Email = request.Email,

@@ -11,6 +11,10 @@ namespace McpServer.IntegrationTests
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl = "http://localhost:5002/api/mcp";
+        JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true // для игнорирования регистра
+        };
 
         public McpControllerIntegrationTests()
         {
@@ -36,7 +40,7 @@ namespace McpServer.IntegrationTests
             // Assert
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<ToolResult<string>>(responseContent);
+            var result = JsonSerializer.Deserialize<ToolResult<string>>(responseContent, _jsonOptions);
             Assert.NotNull(result);
             Assert.Contains("успешно", result.Message);
         }
@@ -55,17 +59,17 @@ namespace McpServer.IntegrationTests
             var createContent = new StringContent(createJson, Encoding.UTF8, "application/json");
             var createResponse = await _httpClient.PostAsync($"{_baseUrl}/create-customer", createContent);
             createResponse.EnsureSuccessStatusCode();
-            
-            var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync());
+
+            var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync(), _jsonOptions);
             var customerId = Guid.Parse(createResult.Data.ToString());
 
             // Act
             var response = await _httpClient.GetAsync($"{_baseUrl}/get-customer/{customerId}");
-
+           
             // Assert
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<ToolResult<CustomerResponse>>(responseContent);
+            var result = JsonSerializer.Deserialize<ToolResult<CustomerResponse>>(responseContent, _jsonOptions);
             Assert.NotNull(result);
             Assert.Contains("успешно", result.Message);
         }
@@ -85,7 +89,7 @@ namespace McpServer.IntegrationTests
             var createResponse = await _httpClient.PostAsync($"{_baseUrl}/create-customer", createContent);
             createResponse.EnsureSuccessStatusCode();
             
-            var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync());
+            var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync(), _jsonOptions);
             var customerId = Guid.Parse(createResult.Data.ToString());
 
             var updateRequest = new CreateCustomerRequest
@@ -103,7 +107,7 @@ namespace McpServer.IntegrationTests
             // Assert
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<ToolResult<string>>(responseContent);
+            var result = JsonSerializer.Deserialize<ToolResult<string>>(responseContent, _jsonOptions);
             Assert.NotNull(result);
             Assert.Contains("успешно", result.Message);
         }
@@ -123,7 +127,7 @@ namespace McpServer.IntegrationTests
             var createResponse = await _httpClient.PostAsync($"{_baseUrl}/create-customer", createContent);
             createResponse.EnsureSuccessStatusCode();
             
-            var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync());
+            var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync(), _jsonOptions);
             var customerId = Guid.Parse(createResult.Data.ToString());
 
             // Act
@@ -132,9 +136,26 @@ namespace McpServer.IntegrationTests
             // Assert
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<ToolResult<string>>(responseContent);
+            var result = JsonSerializer.Deserialize<ToolResult<string>>(responseContent, _jsonOptions);
             Assert.NotNull(result);
             Assert.Contains("успешно", result.Message);
+        }
+
+        [Fact]
+        public async Task GetAllCustomers_ShouldReturnSuccess()
+        {
+            // Act
+            var response = await _httpClient.GetAsync($"{_baseUrl}/get-all-customers");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            var result = JsonSerializer.Deserialize<ToolResult<List<CustomerResponse>>>(responseContent, _jsonOptions);
+            Assert.NotNull(result);
+            Assert.True(result.Success);
+            Assert.Contains("Клиенты успешно получены", result.Message);
+            Assert.NotNull(result.Data);
         }
     }
 }

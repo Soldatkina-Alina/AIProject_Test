@@ -29,7 +29,7 @@ namespace McpServer.Services
             try
             {
                 _logger.LogInformation("Получение списка предпочтений");
-                var response = await _httpClient.GetFromJsonAsync<IEnumerable<PreferenceResponse>>("api/preferences");
+                var response = await _httpClient.GetFromJsonAsync<IEnumerable<PreferenceResponse>>("api/v1/preferences");
                 return response;
             }
             catch (Exception ex)
@@ -44,7 +44,7 @@ namespace McpServer.Services
             try
             {
                 _logger.LogInformation("Получение списка клиентов");
-                var response = await _httpClient.GetFromJsonAsync<IEnumerable<CustomerResponse>>("api/customers");
+                var response = await _httpClient.GetFromJsonAsync<IEnumerable<CustomerResponse>>("api/v1/customers");
                 return response;
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace McpServer.Services
             try
             {
                 _logger.LogInformation("Получение клиента по ID: {CustomerId}", customerId);
-                var response = await _httpClient.GetFromJsonAsync<CustomerResponse>($"api/customers/{customerId}");
+                var response = await _httpClient.GetFromJsonAsync<CustomerResponse>($"api/v1/customers/{customerId}");
                 return response;
             }
             catch (Exception ex)
@@ -74,7 +74,7 @@ namespace McpServer.Services
             try
             {
                 _logger.LogInformation("Создание клиента: {FirstName} {LastName}", request.FirstName, request.LastName);
-                var response = await _httpClient.PostAsJsonAsync("api/customers", request);
+                var response = await _httpClient.PostAsJsonAsync("api/v1/customers", request);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadFromJsonAsync<CustomerResponse>();
             }
@@ -90,7 +90,7 @@ namespace McpServer.Services
             try
             {
                 _logger.LogInformation("Обновление клиента: {CustomerId}", customerId);
-                var response = await _httpClient.PutAsJsonAsync($"api/customers/{customerId}", request);
+                var response = await _httpClient.PutAsJsonAsync($"api/v1/customers/{customerId}", request);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadFromJsonAsync<CustomerResponse>();
             }
@@ -106,7 +106,7 @@ namespace McpServer.Services
             try
             {
                 _logger.LogInformation("Удаление клиента: {CustomerId}", customerId);
-                var response = await _httpClient.DeleteAsync($"api/customers/{customerId}");
+                var response = await _httpClient.DeleteAsync($"api/v1/customers/{customerId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

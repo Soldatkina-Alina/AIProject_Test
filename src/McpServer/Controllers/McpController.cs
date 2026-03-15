@@ -12,19 +12,29 @@ namespace McpServer.Controllers
     {
         private readonly CreateCustomerTool _createCustomerTool;
         private readonly GetCustomerTool _getCustomerTool;
+        private readonly GetAllCustomersTool _getAllCustomersTool;
         private readonly UpdateCustomerTool _updateCustomerTool;
         private readonly DeleteCustomerTool _deleteCustomerTool;
 
         public McpController(
             CreateCustomerTool createCustomerTool,
             GetCustomerTool getCustomerTool,
+            GetAllCustomersTool getAllCustomersTool,
             UpdateCustomerTool updateCustomerTool,
             DeleteCustomerTool deleteCustomerTool)
         {
             _createCustomerTool = createCustomerTool;
             _getCustomerTool = getCustomerTool;
+            _getAllCustomersTool = getAllCustomersTool;
             _updateCustomerTool = updateCustomerTool;
             _deleteCustomerTool = deleteCustomerTool;
+        }
+
+        [HttpGet("get-all-customers")]
+        public async Task<IActionResult> GetAllCustomersAsync()
+        {
+            var result = await _getAllCustomersTool.ExecuteAsync();
+            return Ok(result);
         }
 
         [HttpPost("create-customer")]

@@ -68,16 +68,18 @@ namespace PromoCodeFactory.WebHost
             {
                 x.DocExpansion = "list";
             });
-            
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("API is running");
+                });
             });
-            
+
             dbInitializer.InitializeDb();
         }
     }

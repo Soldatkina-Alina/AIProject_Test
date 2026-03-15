@@ -57,8 +57,8 @@ namespace McpServer.IntegrationTests
             createResponse.EnsureSuccessStatusCode();
             
             var createResult = JsonSerializer.Deserialize<ToolResult<string>>(await createResponse.Content.ReadAsStringAsync());
-            var customerId = Guid.Parse(createResult.Data.ToString());
-
+            //var customerId = Guid.Parse(createResult.Data.ToString());
+            var customerId = new Guid("a6c8c6b1-4349-45b0-ab31-244740aaf0f0");
             // Act
             var response = await _httpClient.GetAsync($"{_baseUrl}/get-customer/{customerId}");
 

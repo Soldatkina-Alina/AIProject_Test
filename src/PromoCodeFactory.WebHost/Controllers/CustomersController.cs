@@ -56,21 +56,64 @@ namespace PromoCodeFactory.WebHost.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerResponse>> CreateCustomerAsync(CreateOrEditCustomerRequest request)
         {
-            //Получаем предпочтения из бд и сохраняем большой объект
-            var preferences = await _preferenceRepository
-                .GetRangeByIdsAsync(request.PreferenceIds);
-
             var customer = new Customer()
             {
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
             };
-            customer.Preferences = preferences.Select(x => new CustomerPreference()
+            
+            // Проверяем, что все PreferenceIds являются допустимыми GUID
+            bool allIdsValid = true;
+            if (request.PreferenceIds != null && request.PreferenceIds.Any())
             {
-                Customer = customer,
-                Preference = x
-            }).ToList();
+                foreach (var id in request.PreferenceIds)
+                {
+                    if (id == Guid.Empty)
+                    {
+                        allIdsValid = false;
+                        break;
+                    }
+                }
+            }
+            
+            // Проверяем, есть ли предпочтения в запросе и все они допустимы
+            if (request.PreferenceIds == null || !request.PreferenceIds.Any() || !allIdsValid)
+            {
+                // Получаем первое доступное предпочтение из БД
+                var allPreferences = await _preferenceRepository.GetAllAsync();
+                var firstPreference = allPreferences.FirstOrDefault();
+                
+                if (firstPreference != null)
+                {
+                    // Используем первое предпочтение
+                    customer.Preferences = new List<CustomerPreference>
+                    {
+                        new CustomerPreference
+                        {
+                            Customer = customer,
+                            Preference = firstPreference
+                        }
+                    };
+                }
+                else
+                {
+                    // Если нет предпочтений в БД, оставляем пустым
+                    customer.Preferences = new List<CustomerPreference>();
+                }
+            }
+            else
+            {
+                // Получаем предпочтения из бд и сохраняем большой объект
+                var preferences = await _preferenceRepository
+                    .GetRangeByIdsAsync(request.PreferenceIds);
+
+                customer.Preferences = preferences.Select(x => new CustomerPreference()
+                {
+                    Customer = customer,
+                    Preference = x
+                }).ToList();
+            }
             
             await _customerRepository.AddAsync(customer);
 

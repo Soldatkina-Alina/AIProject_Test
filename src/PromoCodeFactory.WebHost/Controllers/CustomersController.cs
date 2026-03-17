@@ -120,11 +120,12 @@ namespace PromoCodeFactory.WebHost.Controllers
             
             await _customerRepository.AddAsync(customer);
 
-            return CreatedAtAction(nameof(GetCustomerAsync), new {id = customer.Id}, null);
+            var response = new CustomerResponse(customer);
+            return CreatedAtAction(nameof(GetCustomerAsync), new {id = customer.Id}, response);
         }
         
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> EditCustomersAsync(Guid id, CreateOrEditCustomerRequest request)
+        public async Task<ActionResult<CustomerResponse>> EditCustomersAsync(Guid id, CreateOrEditCustomerRequest request)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
             
@@ -145,11 +146,12 @@ namespace PromoCodeFactory.WebHost.Controllers
 
             await _customerRepository.UpdateAsync(customer);
 
-            return NoContent();
+            var response = new CustomerResponse(customer);
+            return Ok(response);
         }
         
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteCustomerAsync(Guid id)
+        public async Task<ActionResult<string>> DeleteCustomerAsync(Guid id)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
             
@@ -158,7 +160,7 @@ namespace PromoCodeFactory.WebHost.Controllers
 
             await _customerRepository.DeleteAsync(customer);
 
-            return NoContent();
+            return Ok("Customer deleted successfully");
         }
     }
 }

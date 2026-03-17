@@ -5,7 +5,7 @@ services:
     ports:
       - "5001:80"
     volumes:
-      - ./data:/app/data  # Сохранение SQLite БД
+      - ./data:/app/data
   
   mcpserver:
     build: ./src/McpServer
@@ -15,3 +15,6 @@ services:
       - PromoCodeFactoryApiUrl=http://promocodefactory:80
     depends_on:
       - promocodefactory
+
+volumes:
+  data:

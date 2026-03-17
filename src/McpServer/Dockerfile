@@ -1,16 +1,13 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-COPY McpServer.csproj ./
-RUN dotnet restore McpServer.csproj
-
+# Копируем весь солюшен
 COPY . ./
-RUN dotnet build McpServer.csproj -c Release -o /app/build
+RUN dotnet restore McpServer/McpServer.csproj
+RUN dotnet publish McpServer/McpServer.csproj -c Release -o /app/publish
 
-FROM build AS publish
-RUN dotnet publish McpServer.csproj -c Release -o /app/publish
-
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
+EXPOSE 80
 ENTRYPOINT ["dotnet", "McpServer.dll"]

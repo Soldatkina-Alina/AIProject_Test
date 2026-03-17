@@ -25,8 +25,13 @@ namespace McpServer
 
             services.AddHttpClient("PromoCodeFactoryApi", client =>
             {
-                client.BaseAddress = new System.Uri(Configuration["PromoCodeFactoryApi:BaseUrl"]);
-                client.Timeout = System.TimeSpan.FromSeconds(int.Parse(Configuration["PromoCodeFactoryApi:Timeout"]));
+                client.BaseAddress = new System.Uri(Configuration["PromoCodeFactoryApi:BaseUrl"] ?? "http://localhost:5001");
+                int timeoutSeconds = 30;
+                if (!string.IsNullOrEmpty(Configuration["PromoCodeFactoryApi:Timeout"]))
+                {
+                    int.TryParse(Configuration["PromoCodeFactoryApi:Timeout"], out timeoutSeconds);
+                }
+                client.Timeout = System.TimeSpan.FromSeconds(timeoutSeconds);
             });
 
             services.AddTransient<IPromoCodeFactoryApiClient, PromoCodeFactoryApiClient>();

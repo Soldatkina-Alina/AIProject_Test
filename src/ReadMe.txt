@@ -16,6 +16,35 @@
 - src-promocodefactory-1 (PromoCodeFactory.WebHost)
 - src-mcpserver-1 (McpServer)
 
+Cline:
+    "PromoCodeFactoryMcp": {
+      "autoApprove": [
+        "CreateCustomer",
+        "GetCustomerById",
+        "GetAllCustomers",
+        "UpdateCustomer",
+        "DeleteCustomer",
+        "update_customer",
+        "delete_customer",
+        "get_customer_by_id",
+        "create_customer",
+        "get_all_customers"
+      ],
+      "disabled": false,
+      "timeout": 30000,
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "src-mcpserver-1",
+        "dotnet",
+        "McpServer.dll",
+        "--mcp"
+      ]
+    }
+  }
+
 ## Проверка доступности API
 
 ### 1. PromoCodeFactory.WebHost API

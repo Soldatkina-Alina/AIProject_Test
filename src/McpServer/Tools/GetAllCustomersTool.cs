@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using McpServer.Models;
 using McpServer.Services;
 using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Server;
 
 namespace McpServer.Tools
 {
@@ -26,7 +28,9 @@ namespace McpServer.Tools
         /// Получает список всех клиентов
         /// </summary>
         /// <returns>Результат операции со списком клиентов</returns>
-        public async Task<ToolResult<IEnumerable<CustomerResponse>>> ExecuteAsync()
+        [McpServerTool]
+        [Description("Получает список всех клиентов из PromoCodeFactory")]
+        public async Task<ToolResult<IEnumerable<CustomerResponse>>> GetAllCustomersAsync()
         {
             try
             {

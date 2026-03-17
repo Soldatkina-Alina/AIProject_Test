@@ -15,6 +15,7 @@ services:
       dockerfile: McpServer/Dockerfile
     ports:
       - "5002:8080"
+    stdin_open: true
     environment:
       - PromoCodeFactoryApi__BaseUrl=http://promocodefactory:8080
     depends_on:

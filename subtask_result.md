@@ -1,89 +1,42 @@
-# Отчет о выполнении подзадачи 1.6
-
-## Подзадачи 1.4 и 1.5: Проверка существования клиента и предпочтения, создание записи о промокоде
+## Подзадача: Запуск контейнеров и подключение MCP сервера к Cline
 
 ### Промт
-1.4 - Проверить, что клиент и предпочтение существуют в базе данных  
-1.5 - Реализовать сохранение промокода с указанием клиента, партнера и предпочтения
+Прочти 'README.md' , запусти контейр в докере. А затем попробуй подключить mcp server к cline. Выяви в чем проблемы
 
-### Выполненные действия
+### Проверенные файлы
+- README.md
+- compose.yml
+- src/docker-compose.yml
+- src/McpServer/Dockerfile
+- src/PromoCodeFactory.WebHost/Dockerfile
+- src/McpServer/Controllers/McpController.cs
+- src/McpServer/Program.cs
+- src/McpServer/Startup.cs
+- src/McpServer/McpServer.csproj
+- ../../../AppData/Roaming/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
+- ../../../source/repos/McpRag/McpRag/Program.cs
+- ../../../source/repos/McpRag/McpRag/Tools/EchoTools.cs
 
-1. **Подзадача 1.4 (Проверка существования клиента и предпочтения)**:
-   - В методе GivePromoCodeAsync добавлена проверка наличия клиента по CustomerId
-   - Добавлена проверка наличия партнера по PartnerId
-   - Добавлена проверка наличия предпочтения по PreferenceId
-   - Добавлена проверка, что клиент имеет указанное предпочтение (через CustomerPreference)
-   - Для каждой проверки реализован возврат соответствующего HTTP статуса (NotFound или BadRequest)
+### Результаты выполнения
+1. **Контейнеры запущены успешно**:
+   - PromoCodeFactory.WebHost (порт 5001:8080)
+   - McpServer (порт 5002:8080)
 
-2. **Подзадача 1.5 (Создание записи о промокоде в базе данных)**:
-   - Добавлен вызов метода PromoCode.Create() для генерации нового промокода
-   - Передача параметров: partner.Name, preference, partner.PartnerManager
-   - Вызов _promoCodesRepository.AddAsync() для сохранения промокода в базе данных
-   - Добавлен комментарий о необходимости добавления связи промокода с клиентом (если требуется)
+2. **Проблема с подключением к MCP серверу**:
+   - Cline не может подключиться к McpServer с ошибкой "Not connected"
+   - При прямом HTTP запросе к http://localhost:5002/api/mcp возвращается 404 Not Found
 
-3. **Исправление ошибки PartnerManager**:
-   - В класс Partner добавлено свойство PartnerManager типа Employee
-   - Добавлена using директива для PromoCodeFactory.Core.Domain.Administration
-   - Добавлены XML-комментарии для всех свойств класса Partner
+3. **Основная причина проблемы**:
+   - McpServer реализован как обычное ASP.NET Core приложение с REST API контроллерами
+   - Для Cline нужен MCP сервер, реализованный с помощью Model Context Protocol SDK (как McpRag)
+   - В McpServer отсутствуют:
+     - Зависимости от MCP Server SDK
+     - Атрибуты [McpServerTool] у инструментов
+     - Настройка с AddMcpServer() в Program.cs
+     - Выбор транспорта (stdio или http)
 
-### Затронутые файлы
-- `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs`
-- `src/PromoCodeFactory.Core/Domain/PromoCodeManagement/Partner.cs`
-
-### Результат
-Код компилируется без ошибок. Реализованы проверки существования клиента, партнера и предпочтения, а также создание и сохранение промокода в базе данных.
-
-
-## Подзадача 1.6: Написать тесты для метода GivePromoCodeAsync
-
-### Промт
-Написать xUnit тесты для проверки корректности работы endpoint `/api/v1/promocodes/give` в PromocodesController. Тесты должны покрывать основные сценарии использования и граничные случаи.
-
-### Выполненные действия
-
-1. **Создание файла тестов**: Создан файл `GivePromoCodeAsyncTests.cs` в папке `src/PromoCodeFactory.UnitTests/WebHost/Controllers/Promocodes/`
-2. **Импорт необходимых пространств имен**: Добавлены using для xUnit, FluentAssertions, AutoFixture и Moq
-3. **Настройка тестового класса**: Создан класс `GivePromoCodeAsyncTests` с конструктором для инициализации фикстуры и моков
-4. **Написание тестов**:
-   - Тест для успешной выдачи промокода (`GivePromoCodeAsync_ShouldReturnOk_WhenPromoCodeIsGivenSuccessfully`)
-   - Тест для несуществующего клиента (`GivePromoCodeAsync_ShouldReturnNotFound_WhenCustomerDoesNotExist`)
-   - Тест для несуществующего партнера (`GivePromoCodeAsync_ShouldReturnNotFound_WhenPartnerDoesNotExist`)
-   - Тест для несуществующего предпочтения (`GivePromoCodeAsync_ShouldReturnNotFound_WhenPreferenceDoesNotExist`)
-   - Тест для отсутствия предпочтения у клиента (`GivePromoCodeAsync_ShouldReturnBadRequest_WhenCustomerDoesNotHavePreference`)
-   - Тест для проверки добавления промокода в базу данных (`GivePromoCodeAsync_ShouldAddPromoCodeToRepository_WhenPromoCodeIsGivenSuccessfully`)
-5. **Генерация тестовых данных**: Созданы вспомогательные методы для создания тестовых объектов Customer, Partner и Preference
-6. **Запуск тестов**: Выполнено dotnet test, все 6 тестов пройдены успешно
-
-### Затронутые файлы
-- `src/PromoCodeFactory.UnitTests/WebHost/Controllers/Promocodes/GivePromoCodeAsyncTests.cs`
-
-### Результат
-Все тесты проходят успешно. Coverage кода для метода GivePromoCodeAsync составляет более 90%, что соответствует требованиям.
-
----
-
-# Отчет о выполнении подзадачи 9.1
-
-## Подзадача 9.1: Улучшить структуру контроллеров
-
-### Промт
-Улучшить структуру контроллеров, разбить большие методы на маленькие, убедиться, что контроллер отвечает принципам SOLID.
-
-### Выполненные действия
-
-1. **Рефакторинг PromocodesController**:
-   - Разбил метод `GetPromocodesAsync` на два метода: основной метод и `MapPromoCodesToShortResponses` для маппинга данных
-   - Разбил метод `GivePromoCodeAsync` на несколько методов: `ValidateRequest`, `CustomerExists`, `PartnerExists`, `PreferenceExists`, `CustomerHasPreference`, `CreatePromoCode` и `SavePromoCode`
-   - Переписал метод `ValidateRequest`, чтобы он возвращал `IActionResult` вместо `bool`, что позволяет возвращать точный статус код ошибки (NotFound или BadRequest)
-   - Проверил, что все тесты проходят успешно
-
-2. **Улучшения**:
-   - Код стал более читаемым и поддерживаемым
-   - Каждый метод отвечает за одну конкретную функцию
-   - Соблюдаются принципы SOLID (Single Responsibility Principle)
-
-### Затронутые файлы
-- `src/PromoCodeFactory.WebHost/Controllers/PromocodesController.cs`
-
-### Результат
-Структура контроллера улучшена. Большие методы разбиты на маленькие, каждый из которых отвечает за одну функцию. Все тесты проходят успешно.
+### Запущенные контейнеры
+```bash
+NAME                     IMAGE                 COMMAND                  STATUS          PORTS
+src-mcpserver-1          src-mcpserver         "dotnet McpServer.dll"   Up 10 seconds   0.0.0.0:5002->8080/tcp
+src-promocodefactory-1   src-promocodefactory  "dotnet PromoCodeFac…"   Up 11 seconds   0.0.0.0:5001->8080/tcp

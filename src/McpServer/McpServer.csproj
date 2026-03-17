@@ -2,20 +2,24 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework> <!-- Изменено на .NET 8.0 для совместимости с проектом -->
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- Set up the NuGet package to be an MCP server -->
+    <PackAsTool>true</PackAsTool>
+    <PackageType>McpServer</PackageType>
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- MCP Server SDK -->
+    <PackageReference Include="ModelContextProtocol" Version="0.7.0-preview.1" />
+    
     <!-- HTTP клиент для взаимодействия с API -->
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.8" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     
     <!-- JSON сериализация -->
-    <PackageReference Include="System.Text.Json" Version="8.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.3" />
     
     <!-- Логирование -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />

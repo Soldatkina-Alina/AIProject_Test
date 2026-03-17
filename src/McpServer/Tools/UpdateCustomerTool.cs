@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using McpServer.Models;
 using McpServer.Services;
 using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Server;
 
 namespace McpServer.Tools
 {
@@ -28,7 +30,11 @@ namespace McpServer.Tools
         /// <param name="customerId">ID клиента</param>
         /// <param name="request">Новые данные клиента</param>
         /// <returns>Результат операции</returns>
-        public async Task<ToolResult<CustomerResponse>> ExecuteAsync(Guid customerId, CreateCustomerRequest request)
+        [McpServerTool]
+        [Description("Обновляет данные клиента в PromoCodeFactory")]
+        public async Task<ToolResult<CustomerResponse>> UpdateCustomerAsync(
+            [Description("ID клиента")] Guid customerId,
+            [Description("Новые данные клиента")] CreateCustomerRequest request)
         {
             try
             {

@@ -30,7 +30,7 @@ namespace McpServer.Tools
         /// <returns>Результат операции со списком клиентов</returns>
         [McpServerTool]
         [Description("Получает список всех клиентов из PromoCodeFactory")]
-        public async Task<ToolResult<IEnumerable<CustomerResponse>>> GetAllCustomersAsync()
+        public async Task<ToolResult<IEnumerable<CustomerResponse>>> GetAllCustomers()
         {
             try
             {

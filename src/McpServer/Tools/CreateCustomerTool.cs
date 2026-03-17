@@ -32,7 +32,7 @@ namespace McpServer.Tools
         /// <returns>Результат операции</returns>
         [McpServerTool]
         [Description("Создает нового клиента в PromoCodeFactory")]
-        public async Task<ToolResult<CustomerResponse>> CreateCustomerAsync(
+        public async Task<ToolResult<CustomerResponse>> CreateCustomer(
             [Description("Данные для создания клиента")] CreateCustomerRequest request)
         {
             try

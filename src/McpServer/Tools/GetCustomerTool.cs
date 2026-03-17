@@ -31,7 +31,7 @@ namespace McpServer.Tools
         /// <returns>Результат операции</returns>
         [McpServerTool]
         [Description("Получает клиента по ID из PromoCodeFactory")]
-        public async Task<ToolResult<CustomerResponse>> GetCustomerByIdAsync(
+        public async Task<ToolResult<CustomerResponse>> GetCustomerById(
             [Description("ID клиента")] Guid customerId)
         {
             try

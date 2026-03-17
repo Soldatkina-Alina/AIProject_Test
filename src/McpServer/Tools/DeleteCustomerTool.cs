@@ -31,7 +31,7 @@ namespace McpServer.Tools
         /// <returns>Результат операции</returns>
         [McpServerTool]
         [Description("Удаляет клиента из PromoCodeFactory")]
-        public async Task<ToolResult<bool>> DeleteCustomerAsync(
+        public async Task<ToolResult<bool>> DeleteCustomer(
             [Description("ID клиента")] Guid customerId)
         {
             try

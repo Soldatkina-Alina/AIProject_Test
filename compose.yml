@@ -1,21 +1,17 @@
+version: '3.8'
 services:
-  #Db
-  promocode-factory-db:
-    image: "postgres:latest"
-    container_name: 'promocode-factory-db'
-    restart: always 
+  promocodefactory:
+    build: ./src/PromoCodeFactory.WebHost
     ports:
-      - 5433:5432
-    environment: 
-      - POSTGRES_PASSWORD=docker
-  #Api
-  promocode-factory-api:
-    build: src
-    container_name: 'promocode-factory-api'
-    restart: always
+      - "5001:80"
+    volumes:
+      - ./data:/app/data  # Сохранение SQLite БД
+  
+  mcpserver:
+    build: ./src/McpServer
     ports:
-      - "5000:8080"
+      - "5002:80"
     environment:
-      - "ConnectionStrings:PromoCodeFactoryDb=Host=promocode-factory-db;Database=promocode_factory_db;Username=postgres;Password=docker"          
-    depends_on: 
-      - promocode-factory-db
+      - PromoCodeFactoryApiUrl=http://promocodefactory:80
+    depends_on:
+      - promocodefactory

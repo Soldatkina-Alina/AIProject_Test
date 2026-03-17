@@ -39,8 +39,14 @@ namespace McpServer.Tools
             {
                 _logger.LogInformation("Выполнение инструмента создания клиента: {FirstName} {LastName}", request.FirstName, request.LastName);
                 
+                // Убеждаемся, что PreferenceIds не null
+                if (request.PreferenceIds == null)
+                {
+                    request.PreferenceIds = new List<Guid>();
+                }
+                
                 // Если PreferenceIds пустой, получаем первый предпочтение из БД
-                if (request.PreferenceIds == null || request.PreferenceIds.Count == 0)
+                if (request.PreferenceIds.Count == 0)
                 {
                     _logger.LogInformation("PreferenceIds пустой, получаем первый предпочтение из БД");
                     var preferences = await _apiClient.GetPreferencesAsync();
@@ -71,7 +77,7 @@ namespace McpServer.Tools
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при выполнении инструмента создания клиента");
+                _logger.LogError(ex, "Ошибка при выполнении инструмента создания клиента: {Exception}", ex.ToString());
                 
                 return new ToolResult<CustomerResponse>
                 {
